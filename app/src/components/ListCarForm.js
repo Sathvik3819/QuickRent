@@ -72,7 +72,7 @@ function ListCarForm() {
     const [isTyping, setIsTyping] = useState(false);
     const [showSuggestions, setShowSuggestions] = useState(false);
 
-    const LOCATIONIQ_KEY = process.env.REACT_APP_LOCATIONIQ_KEY || import.meta.env.VITE_LOCATIONIQ_KEY;
+    const LOCATIONIQ_KEY = process.env.REACT_APP_LOCATIONIQ_KEY;
 
     // --------------------------------------------------------
     // LOCATION AUTOCOMPLETE HANDLER
@@ -133,68 +133,7 @@ function ListCarForm() {
 
 
 
-    // DEMO DATA HANDLER
-    const handleDemoFill = async () => {
-        try {
-            // Helper to fetch local public images as File objects
-            const getFile = async (path, name, type) => {
-                const res = await fetch(path);
-                const blob = await res.blob();
-                return new File([blob], name, { type });
-            };
 
-            const demoImages = {
-                frontView: await getFile("/demo_images/side_view.jpg", "front.jpg", "image/jpeg"), // Reusing side for front
-                sideView: await getFile("/demo_images/side_view.jpg", "side.jpg", "image/jpeg"),
-                rearView: await getFile("/demo_images/rear_view.jpg", "rear.jpg", "image/jpeg"),
-                interiorDashboard: await getFile("/demo_images/dashboard.png", "dashboard.png", "image/png"),
-                seats: await getFile("/demo_images/seats.png", "seats.png", "image/png"),
-                odometerReading: await getFile("/demo_images/odometer.jpg", "odometer.jpg", "image/jpeg"),
-            };
-
-            setCarData({
-                ...carData,
-                // Text Fields
-                brand: "Maruti Suzuki",
-                model: "Swift",
-                year: "2021",
-                vehicleType: "Hatchback",
-                fuelType: "Petrol",
-                transmissionType: "Manual",
-                seatingCapacity: "5",
-                carNumberPlate: "TS09AB1234",
-                mileage: "18",
-                engineCapacity: "1200",
-                airConditioning: "Yes",
-                fuelTankBatteryCapacity: "37",
-                color: "Red",
-                pricePerDay: "1700",
-                deposit: "2000",
-                // ownerCity removed
-                pickupAddress: "Madhapur, Hyderabad",
-                dropOffAllowed: "Yes",
-                deliveryAvailable: false,
-                deliveryCharge: "0",
-                carCondition: "Excellent",
-                kmLimit: "200",
-                extraKmCharge: "6",
-                ownerFullName: "Akhil Reddy",
-                ownerPhoneNumber: "9876543210",
-                aadhaarLicenseNumber: "XXXX-XXXX-XXXX",
-
-                // Images
-                ...demoImages
-            });
-
-            // Move to Step 2 to show images, then 5 to show done? No, just fill.
-            // Maybe alert user
-            setSubmitMessage({ type: "success", text: "Demo data loaded! Review details and click Next." });
-
-        } catch (error) {
-            console.error("Demo fill error:", error);
-            setSubmitMessage({ type: "error", text: "Failed to load demo images." });
-        }
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -335,11 +274,7 @@ function ListCarForm() {
                 {/* ---------- STEP 1: CAR BASIC INFORMATION ---------- */}
                 {currentStep === 1 && (
                     <>
-                        <div className="col-12 text-end mb-2">
-                            <button type="button" className="btn btn-sm btn-outline-info" onClick={handleDemoFill}>
-                                🪄 Fill Demo Data
-                            </button>
-                        </div>
+
                         <div className="col-md-6">
                             <label className="form-label">Car Brand</label>
                             <input type="text" className="form-control" placeholder="Toyota, BMW..." required name="brand" value={carData.brand} onChange={onChange} />
