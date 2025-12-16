@@ -23,7 +23,12 @@ router.post("/register", async (req, res) => {
         await newUser.save();
 
         const token = await jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
-        res.cookie("token", token, { httpOnly: true });
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // true in production
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' for cross-site in production
+            path: "/"
+        });
 
         res.status(201).json({ success: true, message: "User registered successfully", token, user: newUser });
     } catch (error) {
@@ -46,7 +51,12 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ success: false, message: "Invalid credentials" });
         }
         const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
-        res.cookie("token", token, { httpOnly: true });
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // true in production
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' for cross-site in production
+            path: "/"
+        });
         res.status(200).json({ success: true, message: "User logged in successfully", token, user });
     } catch (error) {
         console.log(error);

@@ -16,9 +16,19 @@ dotenv.config();
 const app = express();
 
 // Middleware
+const allowedOrigins = ["http://localhost:3000", "https://quickrentclient.onrender.com"];
+
 app.use(cors({
-    origin: true,
-    credentials: true
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
